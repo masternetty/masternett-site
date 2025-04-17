@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Masternett IPTV</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white">
+  <header class="p-4 bg-white dark:bg-gray-800 shadow-md">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <h1 class="text-xl font-bold">📺 Masternett IPTV</h1>
+      <nav class="space-x-4">
+        <a href="#home" class="hover:underline">🏠 Início</a>
+        <a href="#planos" class="hover:underline">💰 Planos</a>
+        <a href="#tutoriais" class="hover:underline">🎥 Tutoriais</a>
+        <a href="#assinantes" class="hover:underline">👤 Área do Assinante</a>
+        <a href="#carrinho" class="hover:underline">🛒 Carrinho</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto p-4 space-y-10">
+    <section id="home">
+      <h2 class="text-2xl font-bold mb-2">Bem-vindo à Masternett IPTV!</h2>
+      <p>A melhor experiência em entretenimento, com planos acessíveis e suporte rápido via Telegram.</p>
+    </section>
+
+    <section id="planos">
+      <h2 class="text-xl font-semibold mb-2">💰 Nossos Planos</h2>
+      <ul class="grid md:grid-cols-3 gap-4">
+        <li class="p-4 border rounded shadow">
+          <h3 class="font-bold text-lg">1 Mês</h3>
+          <p>R$35</p>
+          <button class="mt-2 px-4 py-2 bg-green-600 text-white rounded">Adicionar ao carrinho</button>
+        </li>
+        <li class="p-4 border rounded shadow">
+          <h3 class="font-bold text-lg">2 Meses</h3>
+          <p>R$60</p>
+          <button class="mt-2 px-4 py-2 bg-green-600 text-white rounded">Adicionar ao carrinho</button>
+        </li>
+        <li class="p-4 border rounded shadow">
+          <h3 class="font-bold text-lg">4 Meses</h3>
+          <p>R$100</p>
+          <button class="mt-2 px-4 py-2 bg-green-600 text-white rounded">Adicionar ao carrinho</button>
+        </li>
+      </ul>
+    </section>
+
+    <section id="tutoriais">
+      <h2 class="text-xl font-semibold mb-2">🎥 Tutoriais</h2>
+      <p>Veja como instalar e configurar em cada dispositivo. (Será preenchido com vídeos em breve)</p>
+    </section>
+
+    <section id="assinantes">
+      <h2 class="text-xl font-semibold mb-2">👤 Área do Assinante</h2>
+      <p>Acesso exclusivo para clientes. Em breve com login e novidades.</p>
+    </section>
+
+    <section id="carrinho">
+      <h2 class="text-xl font-semibold mb-2">🛒 Carrinho</h2>
+      <p>Você ainda não adicionou nenhum plano.</p>
+    </section>
+  </main>
+
+  <button onclick="window.location.href='https://t.me/masternettbot'" class="fixed bottom-5 right-5 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg">💬 Suporte</button>
+
+  <script>
+    // Em breve: lógica para carrinho, login, modo escuro e integração Pix
+  </script>
+</body>
+</html>
