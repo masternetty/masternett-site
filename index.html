@@ -18,6 +18,19 @@
       border-color: lightgreen;
       outline: none;
     }
+
+    /* Estilo para as abas do menu */
+    .hidden {
+      display: none;
+    }
+
+    .tab {
+      display: none;
+    }
+
+    .active-tab {
+      display: block;
+    }
   </style>
 </head>
 <body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white">
@@ -25,8 +38,11 @@
     <div class="max-w-7xl mx-auto flex justify-between items-center">
       <h1 class="text-xl font-bold">📺 Masternett IPTV</h1>
       <nav class="space-x-4">
-        <button onclick="showTab('inicio')">🏠 Início</button>
-        <button onclick="showTab('login')">🔐 Login</button>
+        <button onclick="showTab('inicio')" class="nav-button">🏠 Início</button>
+        <button onclick="showTab('login')" class="nav-button">🔐 Login</button>
+        <button onclick="showTab('loja')" id="lojaBtn" class="nav-button hidden">🛒 Loja</button>
+        <button onclick="showTab('carrinho')" id="carrinhoBtn" class="nav-button hidden">🛍️ Carrinho</button>
+        <button onclick="showTab('perfil')" id="perfilBtn" class="nav-button hidden">👤 Perfil</button>
       </nav>
     </div>
   </header>
@@ -59,6 +75,18 @@
       <p id="userName">Você não está logado!</p>
       <button onclick="logout()" class="px-4 py-2 bg-red-600 text-white rounded">Sair</button>
     </section>
+
+    <section id="loja" class="tab">
+      <h2 class="text-xl font-semibold mb-4">🛒 Loja</h2>
+      <p>Escolha o plano de IPTV que deseja comprar.</p>
+      <!-- Aqui você pode adicionar a lógica para exibir planos de IPTV e adicionar ao carrinho -->
+    </section>
+
+    <section id="carrinho" class="tab">
+      <h2 class="text-xl font-semibold mb-4">🛍️ Carrinho</h2>
+      <p>Aqui estão os produtos que você adicionou ao carrinho.</p>
+      <!-- Lógica do carrinho -->
+    </section>
   </main>
 
   <script>
@@ -90,6 +118,7 @@
         document.getElementById('userName').innerText = `Bem-vindo, Adminnetty! (Administrador)`;
         localStorage.setItem('userEmail', 'adminnetty'); // Armazenar no localStorage como admin
         showTab('perfil');
+        toggleMenuVisibility(true);
         return;
       }
 
@@ -105,6 +134,7 @@
           document.getElementById('userName').innerText = `Bem-vindo, ${user.email}!`;
           localStorage.setItem('userEmail', user.email); // Armazenar no localStorage
           showTab('perfil');
+          toggleMenuVisibility(true);
         })
         .catch(error => {
           erroMensagem.textContent = 'Erro ao fazer login. Verifique suas credenciais.';
@@ -130,6 +160,7 @@
           document.getElementById('userName').innerText = `Conta criada, ${user.email}!`;
           localStorage.setItem('userEmail', user.email);
           showTab('perfil');
+          toggleMenuVisibility(true);
         })
         .catch(error => {
           erroMensagem.textContent = 'Erro ao criar conta. Tente novamente.';
@@ -143,7 +174,25 @@
         document.getElementById('userName').innerText = "Você não está logado!";
         localStorage.removeItem('userEmail'); // Remover do localStorage
         showTab('inicio');
+        toggleMenuVisibility(false);
       });
+    }
+
+    // Função para mostrar/ocultar as opções do menu após login
+    function toggleMenuVisibility(loggedIn) {
+      const lojaBtn = document.getElementById('lojaBtn');
+      const carrinhoBtn = document.getElementById('carrinhoBtn');
+      const perfilBtn = document.getElementById('perfilBtn');
+      
+      if (loggedIn) {
+        lojaBtn.classList.remove('hidden');
+        carrinhoBtn.classList.remove('hidden');
+        perfilBtn.classList.remove('hidden');
+      } else {
+        lojaBtn.classList.add('hidden');
+        carrinhoBtn.classList.add('hidden');
+        perfilBtn.classList.add('hidden');
+      }
     }
 
     // Persistir estado de login ao recarregar
@@ -152,6 +201,7 @@
       if (userEmail) {
         document.getElementById('userName').innerText = `Bem-vindo, ${userEmail}!`;
         showTab('perfil');
+        toggleMenuVisibility(true);
       }
     }
   </script>
