@@ -1,84 +1,162 @@
+import zipfile
+import os
 
-<!DOCTYPE html>
+# Caminho do diretório onde o arquivo HTML está localizado
+html_directory = '/mnt/data/masternett_iptv_login'
+
+# Criação do diretório para armazenar o arquivo HTML
+os.makedirs(html_directory, exist_ok=True)
+
+# Código HTML fornecido
+html_code = '''<!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Masternett IPTV</title>
+  <title>Login - Masternett IPTV</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    .tab { display: none; }
-    .active-tab { display: block; }
-  </style>
+  <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js"></script>
 </head>
 <body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white">
   <header class="p-4 bg-white dark:bg-gray-800 shadow-md">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
       <h1 class="text-xl font-bold">📺 Masternett IPTV</h1>
       <nav class="space-x-4">
-        <button onclick="showTab('inicio')" class="hover:underline">🏠 Início</button>
-        <button onclick="showTab('planos')" class="hover:underline">💰 Planos</button>
-        <button onclick="showTab('tutoriais')" class="hover:underline">🎥 Tutoriais</button>
-        <button onclick="showTab('assinantes')" class="hover:underline">👤 Assinantes</button>
-        <button onclick="showTab('carrinho')" class="hover:underline">🛒 Carrinho</button>
+        <button onclick="showTab('inicio')">🏠 Início</button>
+        <button onclick="showTab('login')">🔐 Login</button>
       </nav>
     </div>
   </header>
 
   <main class="max-w-7xl mx-auto p-4 space-y-10">
     <section id="inicio" class="tab active-tab">
-      <h2 class="text-2xl font-bold mb-2">Bem-vindo à Masternett IPTV!</h2>
-      <p>A melhor experiência em entretenimento, com planos acessíveis e suporte via Telegram.</p>
+      <h2 class="text-2xl font-bold mb-4">Bem-vindo à Masternett IPTV!</h2>
+      <p>A melhor experiência em IPTV. Faça login ou crie uma conta.</p>
     </section>
 
-    <section id="planos" class="tab">
-      <h2 class="text-xl font-semibold mb-2">💰 Nossos Planos</h2>
-      <ul class="grid md:grid-cols-3 gap-4">
-        <li class="p-4 border rounded shadow">
-          <h3 class="font-bold text-lg">1 Mês</h3>
-          <p>R$35</p>
-          <button class="mt-2 px-4 py-2 bg-green-600 text-white rounded">Adicionar ao carrinho</button>
-        </li>
-        <li class="p-4 border rounded shadow">
-          <h3 class="font-bold text-lg">2 Meses</h3>
-          <p>R$60</p>
-          <button class="mt-2 px-4 py-2 bg-green-600 text-white rounded">Adicionar ao carrinho</button>
-        </li>
-        <li class="p-4 border rounded shadow">
-          <h3 class="font-bold text-lg">4 Meses</h3>
-          <p>R$100</p>
-          <button class="mt-2 px-4 py-2 bg-green-600 text-white rounded">Adicionar ao carrinho</button>
-        </li>
-      </ul>
+    <section id="login" class="tab">
+      <h2 class="text-xl font-semibold mb-4">🔐 Login / Criar Conta</h2>
+      <div>
+        <input type="email" id="email" placeholder="Digite seu email" class="border px-4 py-2 rounded w-full md:w-1/2">
+      </div>
+      <div class="mt-2">
+        <input type="password" id="senha" placeholder="Digite sua senha" class="border px-4 py-2 rounded w-full md:w-1/2">
+      </div>
+      <div class="mt-2">
+        <button onclick="login()" class="px-4 py-2 bg-blue-600 text-white rounded">Entrar</button>
+      </div>
+      <div class="mt-2">
+        <button onclick="cadastro()" class="px-4 py-2 bg-green-600 text-white rounded">Criar Conta</button>
+      </div>
+      <p id="erroMensagem" class="text-red-500 mt-2 hidden"></p>
     </section>
 
-    <section id="tutoriais" class="tab">
-      <h2 class="text-xl font-semibold mb-2">🎥 Tutoriais</h2>
-      <p>Veja como instalar e configurar em cada dispositivo. Em breve com vídeos.</p>
-    </section>
-
-    <section id="assinantes" class="tab">
-      <h2 class="text-xl font-semibold mb-2">👤 Área do Assinante</h2>
-      <p>Conteúdo exclusivo para assinantes. Em breve com login e pedidos de conteúdo.</p>
-    </section>
-
-    <section id="carrinho" class="tab">
-      <h2 class="text-xl font-semibold mb-2">🛒 Carrinho</h2>
-      <p>Seu carrinho está vazio.</p>
+    <section id="perfil" class="tab">
+      <h2 class="text-xl font-semibold mb-2">👤 Seu Perfil</h2>
+      <p id="userName">Você não está logado!</p>
+      <button onclick="logout()" class="px-4 py-2 bg-red-600 text-white rounded">Sair</button>
     </section>
   </main>
 
-  <a href="https://t.me/hteshtyh_bot" target="_blank">
-    <button class="fixed bottom-5 right-5 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-full shadow-lg">💬 Suporte via Telegram</button>
-  </a>
-
   <script>
+    const firebaseConfig = {
+      apiKey: "SUA_API_KEY",
+      authDomain: "SEU_AUTH_DOMAIN",
+      projectId: "SEU_PROJECT_ID",
+      storageBucket: "SEU_STORAGE_BUCKET",
+      messagingSenderId: "SEU_MESSAGING_SENDER_ID",
+      appId: "SEU_APP_ID"
+    };
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
     function showTab(tabId) {
       document.querySelectorAll('.tab').forEach(tab => {
         tab.classList.remove('active-tab');
       });
       document.getElementById(tabId).classList.add('active-tab');
     }
+
+    function login() {
+      const email = document.getElementById('email').value;
+      const senha = document.getElementById('senha').value;
+      const erroMensagem = document.getElementById('erroMensagem');
+
+      if (!email || !senha) {
+        erroMensagem.textContent = 'Por favor, preencha todos os campos.';
+        erroMensagem.classList.remove('hidden');
+        return;
+      }
+
+      auth.signInWithEmailAndPassword(email, senha)
+        .then(userCredential => {
+          const user = userCredential.user;
+          document.getElementById('userName').innerText = `Bem-vindo, ${user.email}!`;
+          localStorage.setItem('userEmail', user.email); // Armazenar no localStorage
+          showTab('perfil');
+        })
+        .catch(error => {
+          erroMensagem.textContent = 'Erro ao fazer login. Verifique suas credenciais.';
+          erroMensagem.classList.remove('hidden');
+          console.error(error.message);
+        });
+    }
+
+    function cadastro() {
+      const email = document.getElementById('email').value;
+      const senha = document.getElementById('senha').value;
+      const erroMensagem = document.getElementById('erroMensagem');
+
+      if (!email || !senha) {
+        erroMensagem.textContent = 'Por favor, preencha todos os campos.';
+        erroMensagem.classList.remove('hidden');
+        return;
+      }
+
+      auth.createUserWithEmailAndPassword(email, senha)
+        .then(userCredential => {
+          const user = userCredential.user;
+          document.getElementById('userName').innerText = `Conta criada, ${user.email}!`;
+          localStorage.setItem('userEmail', user.email);
+          showTab('perfil');
+        })
+        .catch(error => {
+          erroMensagem.textContent = 'Erro ao criar conta. Tente novamente.';
+          erroMensagem.classList.remove('hidden');
+          console.error(error.message);
+        });
+    }
+
+    function logout() {
+      auth.signOut().then(() => {
+        document.getElementById('userName').innerText = "Você não está logado!";
+        localStorage.removeItem('userEmail'); // Remover do localStorage
+        showTab('inicio');
+      });
+    }
+
+    // Persistir estado de login ao recarregar
+    window.onload = function() {
+      const userEmail = localStorage.getItem('userEmail');
+      if (userEmail) {
+        document.getElementById('userName').innerText = `Bem-vindo, ${userEmail}!`;
+        showTab('perfil');
+      }
+    }
   </script>
 </body>
 </html>
+'''
+
+# Salvando o código HTML em um arquivo
+html_file_path = os.path.join(html_directory, 'index.html')
+with open(html_file_path, 'w', encoding='utf-8') as f:
+    f.write(html_code)
+
+# Criando um arquivo zip
+zip_file_path = '/mnt/data/masternett_iptv_login_new.zip'
+with zipfile.ZipFile(zip_file_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+    zipf.write(html_file_path, os.path.basename(html_file_path))
+
+zip_file_path
