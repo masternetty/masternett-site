@@ -1,14 +1,4 @@
-import zipfile
-import os
-
-# Caminho do diretório onde o arquivo HTML está localizado
-html_directory = '/mnt/data/masternett_iptv_login'
-
-# Criação do diretório para armazenar o arquivo HTML
-os.makedirs(html_directory, exist_ok=True)
-
-# Código HTML fornecido
-html_code = '''<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
@@ -83,6 +73,14 @@ html_code = '''<!DOCTYPE html>
       const senha = document.getElementById('senha').value;
       const erroMensagem = document.getElementById('erroMensagem');
 
+      // Verifica se é admin
+      if (email === 'adminnetty' && senha === 'masteradmin') {
+        document.getElementById('userName').innerText = `Bem-vindo, Adminnetty! (Administrador)`;
+        localStorage.setItem('userEmail', 'adminnetty'); // Armazenar no localStorage como admin
+        showTab('perfil');
+        return;
+      }
+
       if (!email || !senha) {
         erroMensagem.textContent = 'Por favor, preencha todos os campos.';
         erroMensagem.classList.remove('hidden');
@@ -147,16 +145,3 @@ html_code = '''<!DOCTYPE html>
   </script>
 </body>
 </html>
-'''
-
-# Salvando o código HTML em um arquivo
-html_file_path = os.path.join(html_directory, 'index.html')
-with open(html_file_path, 'w', encoding='utf-8') as f:
-    f.write(html_code)
-
-# Criando um arquivo zip
-zip_file_path = '/mnt/data/masternett_iptv_login_new.zip'
-with zipfile.ZipFile(zip_file_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
-    zipf.write(html_file_path, os.path.basename(html_file_path))
-
-zip_file_path
