@@ -1,0 +1,32 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Masternet</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="led-bg"></div>
+    <div class="login-box">
+        <h2>Masternet Login</h2>
+        <input type="text" id="username" placeholder="Usuário">
+        <input type="password" id="password" placeholder="Senha">
+        <button onclick="login()">Entrar</button>
+        <p id="error" class="error"></p>
+    </div>
+    <script>
+        function login() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const error = document.getElementById('error');
+            if (user === 'masternetty' && pass === 'masteradm') {
+                localStorage.setItem('admin', true);
+                window.location.href = 'loading.html';
+            } else {
+                error.textContent = 'Usuário ou senha incorretos';
+            }
+        }
+    </script>
+</body>
+</html>

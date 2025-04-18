@@ -1,0 +1,48 @@
+
+body {
+    margin: 0;
+    font-family: 'Arial';
+    background: black;
+    overflow: hidden;
+}
+.led-bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #ff0040, #00f0ff, #a100ff);
+    background-size: 600% 600%;
+    animation: ledFlow 10s ease infinite;
+    z-index: 0;
+}
+@keyframes ledFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+.login-box {
+    position: relative;
+    z-index: 1;
+    background: rgba(0,0,0,0.7);
+    padding: 30px;
+    margin: auto;
+    margin-top: 20vh;
+    width: 300px;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+}
+.login-box input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+}
+.login-box button {
+    padding: 10px;
+    background: #00f0ff;
+    color: black;
+    border: none;
+    cursor: pointer;
+}
+.error {
+    color: red;
+}
