@@ -1,0 +1,148 @@
+# Recriar o arquivo HTML completo com login, carrinho e animação LED
+index_html_completo = """
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Masternet IPTV</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Efeito LED animado */
+        body {
+            background: linear-gradient(45deg, #ff00ff, #00ffff, #ff0000);
+            background-size: 400% 400%;
+            animation: gradient 5s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .login-container {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            color: white;
+        }
+
+        .login-input {
+            margin-bottom: 10px;
+            padding: 10px;
+            width: 80%;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .login-btn {
+            padding: 10px;
+            width: 85%;
+            background-color: #ff00ff;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .carrinho {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .produto {
+            background: #222;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            width: 25%;
+            text-align: center;
+        }
+
+        .produto img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .produto button {
+            background-color: #00ff00;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <input type="text" class="login-input" id="username" placeholder="Usuário" />
+        <input type="password" class="login-input" id="password" placeholder="Senha" />
+        <button class="login-btn" onclick="login()">Entrar</button>
+    </div>
+
+    <div id="main-content" style="display: none;">
+        <div class="carrinho">
+            <div class="produto">
+                <img src="img/tv1.jpg" alt="Plano 1 Mês">
+                <h3>1 Mês</h3>
+                <p>R$35</p>
+                <button onclick="adicionarCarrinho('1 Mês')">Adicionar ao Carrinho</button>
+            </div>
+            <div class="produto">
+                <img src="img/tv2.jpg" alt="Plano 2 Meses">
+                <h3>2 Meses</h3>
+                <p>R$60</p>
+                <button onclick="adicionarCarrinho('2 Meses')">Adicionar ao Carrinho</button>
+            </div>
+            <div class="produto">
+                <img src="img/tv3.jpg" alt="Plano 4 Meses">
+                <h3>4 Meses</h3>
+                <p>R$100</p>
+                <button onclick="adicionarCarrinho('4 Meses')">Adicionar ao Carrinho</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let carrinho = [];
+
+        function login() {
+            const usuario = document.getElementById('username').value;
+            const senha = document.getElementById('password').value;
+
+            if (usuario === 'masternetty' && senha === 'masteradm') {
+                document.querySelector('.login-container').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+            } else {
+                alert('Credenciais inválidas');
+            }
+        }
+
+        function adicionarCarrinho(plano) {
+            carrinho.push(plano);
+            alert(plano + ' adicionado ao carrinho');
+        }
+    </script>
+</body>
+</html>
+"""
+
+# Caminho para salvar o index.html
+index_path = os.path.join(project_dir, "index.html")
+
+# Criando diretório para os arquivos
+os.makedirs(project_dir, exist_ok=True)
+
+# Salvando o conteúdo no arquivo index.html
+with open(index_path, "w") as file:
+    file.write(index_html_completo)
